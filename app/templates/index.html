@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Shelf Life Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input[type="file"],
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #loading {
+            color: #555;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        #response-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #response-message p {
+            margin: 5px 0;
+        }
+        .success {
+            background-color: #e7f9ed;
+            color: #2c662d;
+            border: 1px solid #b2d8bd;
+        }
+        .error {
+            background-color: #f9e7e7;
+            color: #662c2c;
+            border: 1px solid #d8b2b2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fruit Shelf Life Prediction</h1>
+        <form id="predict-form">
+            <input type="file" name="file" id="file-input" accept="image/*" required>
+            <input type="number" name="temperature" id="temperature-input" placeholder="Temperature (°C)" step="0.1" required>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="loading" style="display: none;">Loading, please wait...</div>
+        <div id="response-message"></div>
+    </div>
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const loadingDiv = document.getElementById('loading');
+            const responseDiv = document.getElementById('response-message');
+            loadingDiv.style.display = 'block';
+            responseDiv.innerHTML = '';
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('file-input').files[0];
+            const temperatureInput = document.getElementById('temperature-input').value;
+
+            // Validate input
+            if (!fileInput || !temperatureInput) {
+                responseDiv.innerHTML = '<p class="error">Please provide both an image file and a temperature value.</p>';
+                loadingDiv.style.display = 'none';
+                return;
+            }
+
+            formData.append('file', fileInput);
+            formData.append('temperature', temperatureInput);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+                loadingDiv.style.display = 'none';
+
+                if (response.ok) {
+                    // Display success message
+                    responseDiv.innerHTML = `
+                        <div class="success">
+                            <p><strong>Category:</strong> ${result.category}</p>
+                            <p><strong>Fruit Name:</strong> ${result.name}</p>
+                            <p><strong>Shelf Life:</strong> ${result.life} days</p>
+                            <p><strong>Temperature:</strong> ${parseFloat(result.temperature).toFixed(2)}°C</p>
+                        </div>
+                    `;
+                } else {
+                    // Display backend error message
+                    const errorMessage = result.error || 'An unexpected error occurred.';
+                    responseDiv.innerHTML = `<div class="error"><p>Error: ${errorMessage}</p></div>`;
+                }
+            } catch (err) {
+                loadingDiv.style.display = 'none';
+                responseDiv.innerHTML = `<div class="error"><p>Failed to connect to the server. Please try again later.</p></div>`;
+            }
+        });
+    </script>
+</body>
+</html>
