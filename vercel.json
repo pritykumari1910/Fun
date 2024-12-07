@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/wsgi.py"
+      }
+    ],
+    "env": {
+      "MONGO_URI": "mongodb+srv://projectflipkart1:X73wqR9Wj98SxG84@project.mrazz.mongodb.net/Freshness?retryWrites=true&w=majority",
+      "FLASK_APP": "app"
+    }
+  }
+  
