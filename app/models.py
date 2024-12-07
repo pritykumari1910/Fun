@@ -4,7 +4,7 @@ import tensorflow as tf
 import os
 
 # Load the pre-trained model
-MODEL_PATH = r"C:\Users\Prinshu Kumar\Desktop\Backend\Backend\app\model\New2Freshness50.h5"
+MODEL_PATH = r"app\model\New2Freshness50.h5"
 model = tf.keras.models.load_model(MODEL_PATH)
 
 # Class labels (same as before)
