@@ -1,0 +1,31 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Virtual environment
+venv/
+
+# Logs
+*.log
+
+# Static files (optional: if generated or uploaded dynamically)
+static/uploads/
+
+# Backup files
+*.bak
+*.swp
+
+# IDE files
+.vscode/
+*.code-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python egg files
+*.egg-info/
+*.eggs/
