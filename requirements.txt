@@ -1,3 +1,10 @@
+# TensorFlow Core Library
+tensorflow==2.18.0  # Retain this as it's likely compatible with your target environment
+
+# Remove `tensorflow_intel==2.18.0` as it causes issues with Python 3.12.
+# TensorFlow should automatically detect the correct build (e.g., CPU, GPU, or Intel optimizations) during installation.
+
+# Dependencies
 absl-py==2.1.0
 astunparse==1.6.3
 blinker==1.9.0
@@ -34,10 +41,7 @@ rich==13.9.4
 six==1.17.0
 tensorboard==2.18.0
 tensorboard-data-server==0.7.2
-tensorflow==2.18.0
 tensorflow-io-gcs-filesystem==0.37.1
-
-tensorflow_intel==2.18.0
 termcolor==2.5.0
 typing_extensions==4.12.2
 urllib3==2.2.3
